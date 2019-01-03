@@ -118,12 +118,14 @@ void meteoio_read2DGrid(GeoMatrix<double> &myGrid, char *_filename)
                gridObject.llcorner.getEasting())
         throw IOException("Inconsistencies between 2D Grids read", AT);
 
-      for (unsigned int ii = 0; ii < gridObject.getNy(); ii++)
+      const unsigned int Nx = gridObject.getNx();
+      const unsigned int Ny = gridObject.getNy();
+
+      for (unsigned int ii = 0; ii < Ny; ii++)
         {
-          for (unsigned int jj = 0; jj < gridObject.getNx(); jj++)
+          for (unsigned int jj = 0; jj < Nx; jj++)
             {
-              if (gridObject.grid2D(jj, gridObject.getNy() - 1 - ii) ==
-                  IOUtils::nodata)
+              if (gridObject.grid2D(jj, Ny - 1 - ii) == IOUtils::nodata)
                 {
                   //  myGrid->co[ii + 1][jj + 1] = UV->V->co[2];
                   myGrid[ii + 1][jj + 1] = geotop::common::Variables::UV->V[2];
@@ -132,14 +134,12 @@ void meteoio_read2DGrid(GeoMatrix<double> &myGrid, char *_filename)
                 {
                   //  myGrid->co[ii + 1][jj + 1] = gridObject.grid2D(jj,
                   //      gridObject.nrows - 1 - ii);
-                  myGrid[ii + 1][jj + 1] =
-                    gridObject.grid2D(jj, gridObject.getNy() - 1 - ii);
+                  myGrid[ii + 1][jj + 1] = gridObject.grid2D(jj, Ny - 1 - ii);
                 }
             }
         }
-      std::cout << "Read 2D Grid from file '" << filename
-                << "' : " << gridObject.getNy() << "(rows) " << gridObject.getNx()
-                << "(cols)" << std::endl;
+      std::cout << "Read 2D Grid from file '" << filename << "' : " << Ny
+                << "(rows) " << Nx << "(cols)" << std::endl;
     }
   catch (std::exception &e)
     {
@@ -376,22 +376,25 @@ void copyGridToMatrix(Grid2DObject &gridObject,
                       double &thr_max,
                       double &val_max)
 {
-  for (size_t ii = 0; ii < gridObject.getNy(); ii++)
+
+  const size_t Nx = gridObject.getNx();
+  const size_t Ny = gridObject.getNy();
+
+  for (size_t ii = 0; ii < Ny; ii++)
     {
-      for (size_t jj = 0; jj < gridObject.getNx(); jj++)
+      for (size_t jj = 0; jj < Nx; jj++)
         {
-          if (gridObject.grid2D(jj, gridObject.getNy() - 1 - ii) ==
-              IOUtils::nodata)
+          if (gridObject.grid2D(jj, Ny - 1 - ii) == IOUtils::nodata)
             {
               myGrid[ii + 1][jj + 1] =
                 geotop::input::gDoubleNoValue;  // using the GEOtop nodata value
             }
-          else if (gridObject.grid2D(jj, gridObject.getNy() - 1 - ii) > thr_max)
+          else if (gridObject.grid2D(jj, Ny - 1 - ii) > thr_max)
             {
               myGrid[ii + 1][jj + 1] = val_max;
 
             }
-          else if (gridObject.grid2D(jj, gridObject.getNy() - 1 - ii) < thr_min)
+          else if (gridObject.grid2D(jj, Ny - 1 - ii) < thr_min)
             {
               myGrid[ii + 1][jj + 1] = val_min;
 
@@ -399,7 +402,7 @@ void copyGridToMatrix(Grid2DObject &gridObject,
           else
             {
               myGrid[ii + 1][jj + 1] =
-                gridObject.grid2D(jj, gridObject.getNy() - 1 - ii);
+                gridObject.grid2D(jj, Ny - 1 - ii);
             }
           // std::cout<<"myGrid->co["<<ii<<"]["<<jj<<"]"<<myGrid->co[ii + 1][jj + 1]
           // << std::endl;
@@ -413,12 +416,14 @@ void copyGridToMatrix(Grid2DObject &gridObject,
  */
 void copyGridToMatrix(Grid2DObject &gridObject, GeoMatrix<double> &myGrid)
 {
-  for (size_t ii = 0; ii < gridObject.getNy(); ii++)
+  const size_t Nx = gridObject.getNx();
+  const size_t Ny = gridObject.getNy();
+
+  for (size_t ii = 0; ii < Ny; ii++)
     {
-      for (size_t jj = 0; jj < gridObject.getNx(); jj++)
+      for (size_t jj = 0; jj < Nx; jj++)
         {
-          if (gridObject.grid2D(jj, gridObject.getNy() - 1 - ii) ==
-              IOUtils::nodata)
+          if (gridObject.grid2D(jj, Ny - 1 - ii) == IOUtils::nodata)
             {
               myGrid[ii + 1][jj + 1] =
                 geotop::input::gDoubleNoValue;  // using the GEOtop nodata value
@@ -426,7 +431,7 @@ void copyGridToMatrix(Grid2DObject &gridObject, GeoMatrix<double> &myGrid)
           else
             {
               myGrid[ii + 1][jj + 1] =
-                gridObject.grid2D(jj, gridObject.getNy() - 1 - ii);
+                gridObject.grid2D(jj, Ny - 1 - ii);
             }
           // std::cout<<"myGrid->co["<<ii<<"]["<<jj<<"]"<<myGrid->co[ii + 1][jj + 1]
           // << std::endl;
