@@ -6,6 +6,7 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 *.cmake
+src/geotop/version.h
 
 ### C++ ###
 # Compiled Object files
